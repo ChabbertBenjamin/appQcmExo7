@@ -1,0 +1,12 @@
+{
+  "name": "qcmExo7",
+  "displayName": "qcmExo7",
+  "expo": {
+    "name": "qcmExo7",
+    "slug": "qcmExo7",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
