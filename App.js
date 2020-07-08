@@ -2,10 +2,13 @@ import 'react-native-gesture-handler'
 import * as React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack';
-import {Text, Button, navigation, View, TextInput} from 'react-native'
-import $ from 'jquery'
+import {Text, Button, View, SafeAreaView, FlatList, TouchableOpacity, StyleSheet} from 'react-native'
+import Constants from 'expo-constants';
 
 const Stack = createStackNavigator();
+var holomorphie = require("./data/holomorphie.json");
+var homotopie3 = require("./data/homotopie3.json");
+
 
 function Accueil({ navigation }) {
   return (
@@ -19,14 +22,14 @@ function Accueil({ navigation }) {
       L'application peut octroyer un bonus de points en fonction de la rapidité de la réponse si celle ci est correcte.
       </Text>
       
-      <Text>Liste des thèmes : 
-      </Text>
+      <Text>Liste des thèmes : </Text>
     
     <Button
       title="Homotopie3"
       onPress={() => {
         navigation.navigate('QCM', {
           themeName: "Homotopie3",
+          json: homotopie3,
         });
       }}
     />
@@ -35,33 +38,69 @@ function Accueil({ navigation }) {
       onPress={() => {
         navigation.navigate('QCM', {
           themeName: "Holomorphie",
+          json : holomorphie,
         });
       }}
     />
     </View>
   );
 }
+function Reponse({  id, title, selected, onSelect  }) {
+  return (
+    <TouchableOpacity
+      onPress={() => onSelect(id)}
+      style={[
+        styles.item,
+        { backgroundColor: selected ? '#cafe8c' : '#ffffff' },
+      ]}
+    >
+      <Text style={styles.title}>{title}</Text>
+    </TouchableOpacity>
+  );
+}
 
 function QCM({ navigation, route }) {
   const { themeName } = route.params;
+  const { json } = route.params;
+  const [selected, setSelected] = React.useState(new Map());
+
+  const onSelect = React.useCallback(
+    id => {
+      const newSelected = new Map(selected);
+      newSelected.set(id, !selected.get(id));
+
+      setSelected(newSelected);
+    },
+    [selected],
+  );
+
+  console.log("gogogo")
+
   return (
-    $.get('data/' + {themeName} + '.json', function (d) {
-      // création et affectation d'un objet 'theme' vide:
-      var themeobj = new Object();
-      themeobj.nom = nom;
-      themeobj.info = "";
-      themeobj.data = {};
-      this.themes = [themeobj];
-      if($.type(d[0]) === "string"){
-          this.themes[0].info=d.splice(0,1);
-      }
-      this.themes[0].data=d;//remplissage avec les données:
-      console.log(this.theme[0])
-      app.demarrerTheme(nom, this.themes[0]);
-  },"json"), //getJSON ne marche pas, pb de callback  ?... 
     <View>
-     <Text>{themeName}</Text>
-     <Button title="Go back" onPress={() => navigation.goBack()} />
+      <Text>{json[0].question}</Text>
+      
+      <SafeAreaView >
+          <FlatList
+            data={json[0].answers}
+            renderItem={({ item }) => <Reponse title={item.value} selected={!!selected.get(item.value)} onSelect={onSelect} id={item.value}/>}
+            keyExtractor={item => item.value}
+          />
+      </SafeAreaView>
+     
+    
+
+      <Button
+      title="Valider"
+      onPress={() => {
+        navigation.navigate('QCM', {
+          themeName: themeName,
+          json : json.splice(0,1),
+        });
+      }}
+    />
+      <Button title="GO BACK" onPress={() => navigation.goBack()} />
+
     </View>
   );
 }
@@ -70,6 +109,7 @@ export default function App() {
   
   
   return (
+
     <NavigationContainer>
      <Stack.Navigator>
         <Stack.Screen
@@ -82,10 +122,29 @@ export default function App() {
           component={QCM}/>
         
       </Stack.Navigator>
-    </NavigationContainer>  
+    </NavigationContainer> 
+   
+    
     
 
 
   );
+  
  
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: Constants.statusBarHeight,
+  },
+  item: {
+    backgroundColor: '#ffffff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 10,
+  },
+});
