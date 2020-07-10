@@ -2,8 +2,9 @@ import 'react-native-gesture-handler'
 import * as React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack';
-import {Text, Button, View, SafeAreaView, FlatList, TouchableOpacity, StyleSheet} from 'react-native'
+import {Text, Button, View, SafeAreaView, FlatList, TouchableOpacity, StyleSheet, SectionList} from 'react-native'
 import Constants from 'expo-constants';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Stack = createStackNavigator();
 var holomorphie = require("./data/holomorphie.json");
@@ -26,6 +27,7 @@ function Accueil({ navigation }) {
     
     <Button
       title="Homotopie3"
+      color="#841584"
       onPress={() => {
         navigation.navigate('QCM', {
           themeName: "Homotopie3",
@@ -59,6 +61,24 @@ function Reponse({  id, title, selected, onSelect  }) {
   );
 }
 
+function Resultat({navigation, route}) {
+  const { nbRepJustes } = route.params;
+  const { nbRepFausses } = route.params;
+
+  return(
+
+    <View>
+      <Text>Page Résultat</Text>
+
+      <Button
+          title="Retour à l'accueil"
+          onPress={() => {
+            navigation.navigate('Accueil', {});
+          }}
+        />
+    </View>
+  )
+}
 function QCM({ navigation, route }) {
   const { themeName } = route.params;
   const { json } = route.params;
@@ -74,34 +94,47 @@ function QCM({ navigation, route }) {
     [selected],
   );
 
-  console.log("gogogo")
+
 
   return (
-    <View>
-      <Text>{json[0].question}</Text>
+   
       
-      <SafeAreaView >
-          <FlatList
-            data={json[0].answers}
-            renderItem={({ item }) => <Reponse title={item.value} selected={!!selected.get(item.value)} onSelect={onSelect} id={item.value}/>}
-            keyExtractor={item => item.value}
-          />
+      <SafeAreaView style={styles.container}>
+       
+    
+        <SectionList
+          sections={json}
+          keyExtractor={(item, index) => item + index}
+          renderItem={({ item }) => <Reponse title={item.value} selected={!!selected.get(item.value)} onSelect={onSelect} id={item.value}/>}
+          renderSectionHeader={({ section: { question } }) => (
+            <Text>{question}</Text>
+          )}
+        />
+         <Button
+          title="Valider"
+          onPress={() => {
+            navigation.navigate('Resultat', {
+            nbRepJustes: 0,
+            nbRepFausses : 0,
+            });
+          }}
+        />
+
+        
       </SafeAreaView>
+ 
+
+
+      
+
+ 
      
     
 
-      <Button
-      title="Valider"
-      onPress={() => {
-        navigation.navigate('QCM', {
-          themeName: themeName,
-          json : json.splice(0,1),
-        });
-      }}
-    />
-      <Button title="GO BACK" onPress={() => navigation.goBack()} />
+      
+      
 
-    </View>
+
   );
 }
 
@@ -120,6 +153,9 @@ export default function App() {
         <Stack.Screen 
           name="QCM" 
           component={QCM}/>
+          <Stack.Screen 
+          name="Resultat" 
+          component={Resultat}/>
         
       </Stack.Navigator>
     </NavigationContainer> 
@@ -137,14 +173,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: Constants.statusBarHeight,
+    marginHorizontal: 16
   },
   item: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#f9c2ff",
     padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    marginVertical: 8
+  },
+  header: {
+    fontSize: 24,
+    backgroundColor: "#fff"
   },
   title: {
-    fontSize: 10,
-  },
+    fontSize: 12
+  }
 });
+
