@@ -7,7 +7,7 @@
           }
         ],
         "question": "Soit \\(\\gamma : [0,\\pi]\\to \\mathbb C, t\\mapsto e^{it}\\). Pour tout \\((s,t)\\in[0,1]\\times[0,\\pi]\\) on note \\(H(s,t)= e^{ist}\\).\n",
-        "answers": [
+        "data": [
           {
             "value": "Dans l'ouvert  \\(U:=\\mathbb C\\), \\(H\\) définit une homotopie entre le chemin constant \\(1\\) et \\(\\gamma\\).\n",
             "correct": true
@@ -30,7 +30,7 @@
           }
         ],
         "question": "Soit \\(\\gamma : [0,2\\pi]\\to \\mathbb C, t\\mapsto e^{it}\\).\n",
-        "answers": [
+        "data": [
           {
             "value": "Dans l'ouvert \\(U:=\\mathbb C\\), la formule \\(H(s,t)= e^{ist}\\) définit une homotopie  entre le chemin constant \\(1\\) et \\(\\gamma\\).\n",
             "correct": true
@@ -73,7 +73,7 @@
           }
         ],
         "question": "On définit les chemins suivants:\n\\[\n\\gamma_1 : [0,\\pi]\\to \\mathbb C, t\\mapsto e^{it};\\quad\n\\gamma_2 :  [0,\\pi]\\to \\mathbb C, t\\mapsto e^{-it};\\]\n",
-        "answers": [
+        "data": [
           {
             "value": "Dans l'ouvert \\(U:=\\mathbb C\\), la formule \\(H(s,t)=(1-2s)\\gamma_1(t)\\) pour \\((s,t)\\in[0,1]\\times[0,\\pi]\\) définit une homotopie  entre \\(\\gamma_1\\) et \\(\\gamma_2\\).\n",
             "correct": false
